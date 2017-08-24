@@ -10,7 +10,7 @@ gunicorn=19.1.0=py35_0
 html5lib=0.9999999=py35_0
 itsdangerous=0.24=py35_0
 jinja2=2.9.6=py35_0
-libprotobuf=3.2.0=vc14_0
+#libprotobuf=3.2.0=vc14_0
 markdown=2.6.8=py35_0
 markupsafe=1.0=py35_0
 mkl=2017.0.3=0
