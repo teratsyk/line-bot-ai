@@ -19,7 +19,7 @@ pip=9.0.1=py35_1
 protobuf=3.2.0=py35_0
 python=3.5.4=0
 #setuptools=27.2.0=py35_1
-six=1.10.0=py35_1
+#six=1.10.0=py35_1
 tensorflow=1.2.1=py35_0
 vs2015_runtime=14.0.25420=0
 werkzeug=0.12.2=py35_0
