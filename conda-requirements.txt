@@ -1,8 +1,6 @@
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: win-64
-# add nomkl
-nomkl
 backports.weakref=1.0rc1=py35_0
 bleach=1.5.0=py35_0
 click=6.7=py35_0
