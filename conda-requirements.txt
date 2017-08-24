@@ -24,4 +24,4 @@ tensorflow=1.2.1=py35_0
 #vs2015_runtime=14.0.25420=0
 werkzeug=0.12.2=py35_0
 wheel=0.29.0=py35_0
-zlib=1.2.11=vc14_0
+#zlib=1.2.11=vc14_0
