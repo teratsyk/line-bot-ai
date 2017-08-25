@@ -89,8 +89,10 @@ def send_reply(body):
                 if event['source']['type'] == 'user':
                     lineId = event['source']['userId']
                 text = get_dialogue(event['message']['text'], lineId)
-            else:
+
+            if not text:
                 text = '(´・ω・`)'
+
             responses.append({'type': 'text', 'text': text})
 
         # 返信する
