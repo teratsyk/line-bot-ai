@@ -7,7 +7,6 @@ import multiprocessing as mp
 
 from flask import Flask
 from flask import request
-from flask_api import status
 
 LINE_API_REPLY ='https://api.line.me/v2/bot/message/reply'
 LINE_HEADERS = {
@@ -48,7 +47,7 @@ def get_dialogue(text):
         headers=DOCOMO_HEADERS
     )
     logging.debug(r)
-    if r.status_code == status.HTTP_200_OK:
+    if r.status_code == 200:
         set_context(r.text.context)
         response_text = r.text.utt
 
