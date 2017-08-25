@@ -7,7 +7,7 @@ import multiprocessing as mp
 from flask import Flask
 from flask import request
 
-LINE_API_PROFILE = 'https://api.line.me/v2/profile'
+LINE_API_PROFILE = 'https://api.line.me/v2/bot/profile'
 LINE_API_REPLY ='https://api.line.me/v2/bot/message/reply'
 LINE_HEADERS = {
     'Content-type': 'application/json',
