@@ -8,6 +8,7 @@ import multiprocessing as mp
 from flask import Flask
 from flask import request
 
+LINE_API_PROFILE = 'https://api.line.me/v2/profile'
 LINE_API_REPLY ='https://api.line.me/v2/bot/message/reply'
 LINE_HEADERS = {
     'Content-type': 'application/json',
@@ -17,39 +18,55 @@ DOCOMO_API_DIALOGUE = 'https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue'
 DOCOMO_HEADERS = {
     'Content-type': 'application/json'
 }
+# 20: 関西弁キャラ, 30: 赤ちゃんキャラ、指定なし: デフォルトキャラ
+DOCOMO_API_CHARACTER = '20'
 
-def get_username():
-    '''LINEユーザ名を取得'''
-    return 'お前'
+def get_lineuser():
+    '''LINE情報を取得'''
+    lineid = ''
+    name = 'あなた'
+
+    r = requests.get(LINE_API_PROFILE, headers=LINE_HEADERS)
+    if r.status_code == 200:
+        body = r.json()
+        logging.debug(body)
+        lineid = body["userId"]
+        name = body["displayName"]
+
+    return [lineid, name]
 
 def get_context():
     '''ユーザごとのコンテキストをredis等から取得'''
-    return ''
+    context = ''
+    mode = 'dialog'
+    return [context, mode]
 
-def set_context(context):
+def set_context(lineid, context, mode):
     '''ユーザごとのコンテキストをredis等に保存'''
-
+    # ラインIDをキーとしてコンテキスト、モードの保存
 
 def get_dialogue(text):
     '''入力されたテキストに対するレスポンスを生成する'''
     response_utt = ''
+    lineid, nickname = get_lineuser()
+    context, mode = get_context()
 
     params = {
         "utt": text,
-        "context": get_context(),
-        "nickname": get_username(),
-        "mode": "dialog",
-        "t": "20"
+        "context": context,
+        "nickname": nickname,
+        "mode": mode,
+        "t": DOCOMO_API_CHARACTER
     }
     r = requests.post(
         "{}?APIKEY={}".format(DOCOMO_API_DIALOGUE, os.environ['DOCOMO_API_KEY']),
         data=json.dumps(params),
         headers=DOCOMO_HEADERS
     )
-    logging.debug(r)
     if r.status_code == 200:
         body = r.json()
-        set_context(body["context"])
+        logging.debug(body)
+        set_context(lineid, body["context"], body["mode"])
         response_utt = body["utt"]
 
     return response_utt
