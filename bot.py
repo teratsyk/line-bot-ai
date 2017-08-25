@@ -24,7 +24,7 @@ def get_nickname(lineId):
     '''LINE情報を取得'''
     name = 'あなた'
 
-    if lineId is not None:
+    if lineId:
         print(LINE_API_PROFILE + '/' + lineId)
         r = requests.get(LINE_API_PROFILE + '/' + lineId, headers=LINE_HEADERS)
         if r.status_code == 200:
@@ -85,8 +85,10 @@ def send_reply(body):
         if event['type'] == 'message':
             text = ''
             if event['message']['type'] == 'text':
-                userId = event['source']['type'] == 'user' ? event['source']['userId'] : None
-                text = get_dialogue(event['message']['text'], userId)
+                lineId = ''
+                if event['source']['type'] == 'user':
+                    lineId = event['source']['userId']
+                text = get_dialogue(event['message']['text'], lineId)
             else:
                 text = '(´・ω・`)'
             responses.append({'type': 'text', 'text': text})
