@@ -20,19 +20,17 @@ DOCOMO_HEADERS = {
 # 20: 関西弁キャラ, 30: 赤ちゃんキャラ、指定なし: デフォルトキャラ
 DOCOMO_API_CHARACTER = '20'
 
-def get_lineuser():
+def get_nickname(lineId):
     '''LINE情報を取得'''
-    lineid = ''
     name = 'あなた'
 
-    r = requests.get(LINE_API_PROFILE, headers=LINE_HEADERS)
+    r = requests.get(LINE_API_PROFILE + '/' + lineId, headers=LINE_HEADERS)
     if r.status_code == 200:
         body = r.json()
         print(body)
-        lineid = body["userId"]
         name = body["displayName"]
 
-    return [lineid, name]
+    return name
 
 def get_context():
     '''ユーザごとのコンテキストをredis等から取得'''
@@ -44,16 +42,15 @@ def set_context(lineid, context, mode):
     '''ユーザごとのコンテキストをredis等に保存'''
     # ラインIDをキーとしてコンテキスト、モードの保存
 
-def get_dialogue(text):
+def get_dialogue(text, lineId):
     '''入力されたテキストに対するレスポンスを生成する'''
     response_utt = ''
-    lineid, nickname = get_lineuser()
     context, mode = get_context()
 
     params = {
         "utt": text,
         "context": context,
-        "nickname": nickname,
+        "nickname": get_nickname(lineId),
         "mode": mode,
         "t": DOCOMO_API_CHARACTER
     }
@@ -84,7 +81,7 @@ def send_reply(body):
             text = ''
 
             if message['type'] == 'text':
-                text = get_dialogue(message['text'])
+                text = get_dialogue(message['text'], event['source']['userId'])
             else:
                 text = '(´・ω・`)'
 
