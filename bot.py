@@ -1,7 +1,6 @@
 import os
 import requests
 import json
-import logging
 import tensorflow as tf
 import multiprocessing as mp
 
@@ -29,7 +28,7 @@ def get_lineuser():
     r = requests.get(LINE_API_PROFILE, headers=LINE_HEADERS)
     if r.status_code == 200:
         body = r.json()
-        logging.debug(body)
+        print(body)
         lineid = body["userId"]
         name = body["displayName"]
 
@@ -65,7 +64,7 @@ def get_dialogue(text):
     )
     if r.status_code == 200:
         body = r.json()
-        logging.debug(body)
+        print(body)
         set_context(lineid, body["context"], body["mode"])
         response_utt = body["utt"]
 
@@ -100,7 +99,6 @@ def send_reply(body):
         requests.post(LINE_API_REPLY, data=json.dumps(reply), headers=LINE_HEADERS)
 
 app = Flask(__name__)
-app.debug = True
 
 @app.route("/webhook", methods=['POST'])
 def webhook():
