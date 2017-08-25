@@ -32,7 +32,7 @@ def set_context(context):
 
 def get_dialogue(text):
     '''入力されたテキストに対するレスポンスを生成する'''
-    response_text = ''
+    response_utt = ''
 
     params = {
         "utt": text,
@@ -48,10 +48,11 @@ def get_dialogue(text):
     )
     logging.debug(r)
     if r.status_code == 200:
-        set_context(r.text.context)
-        response_text = r.text.utt
+        response_body = json.load(r.json())
+        set_context(response_body["context"])
+        response_utt = response_body["utt"]
 
-    return response_text
+    return response_utt
 
 def send_reply(body):
     '''
