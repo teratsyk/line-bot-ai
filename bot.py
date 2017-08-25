@@ -55,7 +55,7 @@ def get_context(lineId):
     val = r.get(lineId)
     print(val)
     if val:
-        data = json.loads(val)
+        data = json.loads(val.decode('utf-8'))
         context = data['context']
         mode = data['mode']
 
