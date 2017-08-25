@@ -62,7 +62,7 @@ def get_dialogue(text, lineId):
     if r.status_code == 200:
         body = r.json()
         print(body)
-        set_context(lineid, body["context"], body["mode"])
+        set_context(lineId, body["context"], body["mode"])
         response_utt = body["utt"]
 
     return response_utt
@@ -77,16 +77,13 @@ def send_reply(body):
         responses = []
 
         if event['type'] == 'message':
-            message = event['message']
             text = ''
-
-            if message['type'] == 'text':
-                text = get_dialogue(message['text'], event['source']['userId'])
+            if event['message']['type'] == 'text':
+                text = get_dialogue(event['message']['text'], event['source']['userId'])
             else:
                 text = '(´・ω・`)'
-
             responses.append({'type': 'text', 'text': text})
-
+            
         # 返信する
         reply = {
             'replyToken': event['replyToken'],
