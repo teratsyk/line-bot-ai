@@ -48,9 +48,9 @@ def get_dialogue(text):
     )
     logging.debug(r)
     if r.status_code == 200:
-        response_body = json.load(r.json())
-        set_context(response_body["context"])
-        response_utt = response_body["utt"]
+        body = r.json()
+        set_context(body["context"])
+        response_utt = body["utt"]
 
     return response_utt
 
