@@ -7,18 +7,20 @@ import multiprocessing as mp
 from flask import Flask
 from flask import request
 
+REDIS_URL = os.environ['REDIS_URL'] # herokuによって登録済み
 LINE_API_PROFILE = 'https://api.line.me/v2/bot/profile'
 LINE_API_REPLY ='https://api.line.me/v2/bot/message/reply'
 LINE_HEADERS = {
     'Content-type': 'application/json',
     'Authorization': 'Bearer {}'.format(os.environ['CHANNEL_ACCESS_TOKEN'])
 }
+DOCOMO_API_KEY = os.environ['DOCOMO_API_KEY']
 DOCOMO_API_DIALOGUE = 'https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue'
 DOCOMO_HEADERS = {
     'Content-type': 'application/json'
 }
 # 20: 関西弁キャラ, 30: 赤ちゃんキャラ、指定なし: デフォルトキャラ
-DOCOMO_API_CHARACTER = '20'
+DOCOMO_API_CHARACTER = os.environ.get('DOCOMO_API_CHARACTER', '')
 
 def get_nickname(lineId):
     '''LINE情報を取得'''
@@ -59,7 +61,7 @@ def get_dialogue(text, lineId):
         "t": DOCOMO_API_CHARACTER
     }
     r = requests.post(
-        "{}?APIKEY={}".format(DOCOMO_API_DIALOGUE, os.environ['DOCOMO_API_KEY']),
+        "{}?APIKEY={}".format(DOCOMO_API_DIALOGUE, DOCOMO_API_KEY),
         data=json.dumps(params),
         headers=DOCOMO_HEADERS
     )
