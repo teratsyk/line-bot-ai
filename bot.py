@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+import redis
 import tensorflow as tf
 import multiprocessing as mp
 
@@ -38,20 +39,30 @@ def get_nickname(lineId):
 
     return name
 
-def get_context():
+def get_context(lineId):
     '''ユーザごとのコンテキストをredis等から取得'''
     context = ''
     mode = 'dialog'
+
+    r = redis.Redis(REDIS_URL)
+    val = r.get(lineId)
+    if val:
+        data = json.loads(val)
+        context = data['context']
+        mode = data['mode']
+
     return [context, mode]
 
-def set_context(lineid, context, mode):
+def set_context(lineId, context, mode):
     '''ユーザごとのコンテキストをredis等に保存'''
     # ラインIDをキーとしてコンテキスト、モードの保存
+    r = redis.Redis(REDIS_URL)
+    r.set(lineId, json.dumps({'context': context, 'mode': mode}))
 
 def get_dialogue(text, lineId):
     '''入力されたテキストに対するレスポンスを生成する'''
     response_utt = ''
-    context, mode = get_context()
+    context, mode = get_context(lineId)
 
     params = {
         "utt": text,
