@@ -44,7 +44,7 @@ def set_context(lineId, context, mode):
     # ラインIDをキーとしてコンテキスト、モードの保存
     r = redis.from_url(REDIS_URL)
     # expire: 180s
-    r.setex(lineId, 180, json.dumps({'context': context, 'mode': mode}))
+    r.setex(lineId, json.dumps({'context': context, 'mode': mode}), 180)
 
 def get_context(lineId):
     '''ユーザごとのコンテキストをredis等から取得'''
