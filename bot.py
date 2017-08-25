@@ -24,11 +24,15 @@ def get_nickname(lineId):
     '''LINE情報を取得'''
     name = 'あなた'
 
-    r = requests.get(LINE_API_PROFILE + '/' + lineId, headers=LINE_HEADERS)
-    if r.status_code == 200:
-        body = r.json()
-        print(body)
-        name = body["displayName"]
+    if lineId is not None:
+        print(LINE_API_PROFILE + '/' + lineId)
+        r = requests.get(LINE_API_PROFILE + '/' + lineId, headers=LINE_HEADERS)
+        if r.status_code == 200:
+            body = r.json()
+            print(body)
+            name = body["displayName"]
+        else:
+            print(r)
 
     return name
 
@@ -64,6 +68,8 @@ def get_dialogue(text, lineId):
         print(body)
         set_context(lineId, body["context"], body["mode"])
         response_utt = body["utt"]
+    else:
+        print(r)
 
     return response_utt
 
@@ -79,11 +85,12 @@ def send_reply(body):
         if event['type'] == 'message':
             text = ''
             if event['message']['type'] == 'text':
-                text = get_dialogue(event['message']['text'], event['source']['userId'])
+                userId = event['source']['type'] == 'user' ? event['source']['userId'] : None
+                text = get_dialogue(event['message']['text'], userId)
             else:
                 text = '(´・ω・`)'
             responses.append({'type': 'text', 'text': text})
-            
+
         # 返信する
         reply = {
             'replyToken': event['replyToken'],
