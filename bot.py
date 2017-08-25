@@ -77,7 +77,6 @@ def send_reply(body):
     それ以外は顔文字を返す
     '''
     for event in body['events']:
-        logging.debug(event)
         responses = []
 
         if event['type'] == 'message':
