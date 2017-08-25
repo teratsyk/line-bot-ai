@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+import logging
 import tensorflow as tf
 import multiprocessing as mp
 
@@ -9,12 +10,13 @@ from flask import request
 
 LINE_API_REPLY ='https://api.line.me/v2/bot/message/reply'
 LINE_HEADERS = {
-    'Content-type': 'application/json; charset=UTF-8',
+    'Content-type': 'application/json',
     'Authorization': 'Bearer {}'.format(os.environ['CHANNEL_ACCESS_TOKEN'])
 }
 
 def send_reply(body):
     for event in body['events']:
+        logging.debug(event)
         responses = []
 
         if event['type'] == 'message':
@@ -35,7 +37,7 @@ def send_reply(body):
             'replyToken': event['replyToken'],
             'messages': responses
         }
-        requests.post(LINE_API_REPLY, json.dumps(reply), LINE_HEADERS)
+        requests.post(LINE_API_REPLY, data=json.dumps(reply), headers=LINE_HEADERS)
 
 app = Flask(__name__)
 
