@@ -24,11 +24,9 @@ def send_reply(body):
             text = ''
 
             if message['type'] == 'text':
-                # そのままオウム返し
                 text = message['text']
             else:
-                # テキスト以外のメッセージにはてへぺろしておく
-                text = 'てへぺろ'
+                text = '(´・ω・`)'
 
             responses.append({'type': 'text', 'text': text})
 
