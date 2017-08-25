@@ -39,6 +39,13 @@ def get_nickname(lineId):
 
     return name
 
+def set_context(lineId, context, mode):
+    '''ユーザごとのコンテキストをredis等に保存'''
+    # ラインIDをキーとしてコンテキスト、モードの保存
+    r = redis.from_url(REDIS_URL)
+    # expire: 180s
+    r.setex(lineId, 180, json.dumps({'context': context, 'mode': mode}))
+
 def get_context(lineId):
     '''ユーザごとのコンテキストをredis等から取得'''
     context = ''
@@ -46,18 +53,13 @@ def get_context(lineId):
 
     r = redis.from_url(REDIS_URL)
     val = r.get(lineId)
+    print(val)
     if val:
         data = json.loads(val)
         context = data['context']
         mode = data['mode']
 
     return [context, mode]
-
-def set_context(lineId, context, mode):
-    '''ユーザごとのコンテキストをredis等に保存'''
-    # ラインIDをキーとしてコンテキスト、モードの保存
-    r = redis.from_url(REDIS_URL)
-    r.set(lineId, json.dumps({'context': context, 'mode': mode}))
 
 def get_dialogue(text, lineId):
     '''入力されたテキストに対するレスポンスを生成する'''
