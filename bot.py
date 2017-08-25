@@ -8,14 +8,14 @@ import multiprocessing as mp
 from flask import Flask
 from flask import request
 
-REDIS_URL = os.environ['REDIS_URL'] # herokuによって登録済み
+REDIS_URL = os.environ.get('REDIS_URL') # herokuによって登録済み
 LINE_API_PROFILE = 'https://api.line.me/v2/bot/profile'
 LINE_API_REPLY ='https://api.line.me/v2/bot/message/reply'
 LINE_HEADERS = {
     'Content-type': 'application/json',
-    'Authorization': 'Bearer {}'.format(os.environ['CHANNEL_ACCESS_TOKEN'])
+    'Authorization': 'Bearer {}'.format(os.environ.get('CHANNEL_ACCESS_TOKEN'))
 }
-DOCOMO_API_KEY = os.environ['DOCOMO_API_KEY']
+DOCOMO_API_KEY = os.environ.get('DOCOMO_API_KEY')
 DOCOMO_API_DIALOGUE = 'https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue'
 DOCOMO_HEADERS = {
     'Content-type': 'application/json'
@@ -44,7 +44,7 @@ def get_context(lineId):
     context = ''
     mode = 'dialog'
 
-    r = redis.Redis(REDIS_URL)
+    r = redis.from_url(REDIS_URL)
     val = r.get(lineId)
     if val:
         data = json.loads(val)
@@ -56,7 +56,7 @@ def get_context(lineId):
 def set_context(lineId, context, mode):
     '''ユーザごとのコンテキストをredis等に保存'''
     # ラインIDをキーとしてコンテキスト、モードの保存
-    r = redis.Redis(REDIS_URL)
+    r = redis.from_url(REDIS_URL)
     r.set(lineId, json.dumps({'context': context, 'mode': mode}))
 
 def get_dialogue(text, lineId):
