@@ -8,6 +8,7 @@ import multiprocessing as mp
 from flask import Flask
 from flask import request
 
+MODE = 'docomo'
 REDIS_URL = os.environ.get('REDIS_URL') # herokuによって登録済み
 LINE_API_PROFILE = 'https://api.line.me/v2/bot/profile'
 LINE_API_REPLY ='https://api.line.me/v2/bot/message/reply'
@@ -61,8 +62,8 @@ def get_context(lineId):
 
     return [context, mode]
 
-def get_dialogue(text, lineId):
-    '''入力されたテキストに対するレスポンスを生成する'''
+def __get_dialogue_docomo(text, lineId):
+    '''DOCOMO会話APIを使用してメッセージを生成する'''
     response_utt = ''
     context, mode = get_context(lineId)
 
@@ -87,6 +88,22 @@ def get_dialogue(text, lineId):
         print(r)
 
     return response_utt
+
+def __get_dialogue_dl(text, lineId):
+    '''内部ディープラーニングを使用してメッセージを生成する'''
+    return ''
+
+def get_dialogue(text, lineId):
+    '''入力されたテキストに対するレスポンスを生成する'''
+    response_msg = ''
+
+    if MODE == 'docomo':
+        response_msg = __get_dialogue_docomo(text, lineId)
+    else:
+        response_msg = __get_dialogue_dl(text, lineId)
+
+    return response_msg
+
 
 def send_reply(body):
     '''
