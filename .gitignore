@@ -1,3 +1,15 @@
+# train
+nuc.zip
+nuc
+sequence.txt
+input.txt
+output.txt
+
+# other
+.vscode
+
+# python
 *.pyc
 *.pyo
-.vscode
+
+!.gitkeep
