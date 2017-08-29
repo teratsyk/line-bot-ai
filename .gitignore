@@ -1,3 +1,8 @@
 *.pyc
 *.pyo
+nuc.zip
+nuc
+sequence.txt
+input.txt
+output.txt
 .vscode
