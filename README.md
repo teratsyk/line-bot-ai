@@ -244,10 +244,11 @@ $ heroku config:set {変数名}={パラメータ}
 * pythonライブラリ
     * nkf
       * `pip install nkf`
+        * うまく動かなかった・・・。未解決
     * mecab-python3
       * [ここ](https://pypi.python.org/pypi/mecab-python3/0.7)からDLしてビルド
         * いろいろあるので[サイト参考](http://own-search-and-study.xyz/2017/06/28/mecab%E3%82%92%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%97python%E3%81%8B%E3%82%89%E4%BD%BF%E3%81%86%E6%96%B9%E6%B3%95%E3%81%BE%E3%81%A8%E3%82%81/)
-      * win環境での構築が面倒なので形態素解析はなし
+          * 参考サイトと状況が異なり未解決。構築が面倒なので形態素解析はスキップ
 
 
 ### 学習用の会話データを作成
@@ -256,6 +257,8 @@ $ heroku config:set {変数名}={パラメータ}
 ```
 $ python mksequence.py
 ```
+
+**TODO: 形態素解析**
 
 # 続く
 
