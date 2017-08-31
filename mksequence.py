@@ -104,11 +104,8 @@ def main():
     # 作成したファイルからinputとoutputを分ける
     make_input_file()
     make_output_file()
-
     return
 
 if __name__ == "__main__":
     main()
-    sys.stdout.close()
-    sys.stdout = sys.__stdout__
     sys.exit(0)
